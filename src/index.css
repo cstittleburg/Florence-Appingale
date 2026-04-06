@@ -2,65 +2,181 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  font-family: 'Inter', system-ui, sans-serif;
-}
+* { font-family: 'Inter', system-ui, sans-serif; }
 
 body {
-  @apply bg-slate-50 text-slate-900;
+  background-color: #f0f4f8;
+  color: #0f172a;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  @apply bg-slate-100;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 rounded-full;
-}
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-400;
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ─── Card ─── */
+.card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.04);
 }
 
-/* Prose-like chat message styling */
-.chat-message p { @apply mb-2; }
-.chat-message ul { @apply list-disc pl-4 mb-2; }
-.chat-message ol { @apply list-decimal pl-4 mb-2; }
-.chat-message strong { @apply font-semibold; }
-.chat-message h3 { @apply font-semibold text-base mb-1; }
+/* ─── Clinical panel ─── */
+.panel {
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
 
-/* Health slider accent */
+/* ─── Buttons ─── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #0074a4, #0091cd);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0,145,205,0.3);
+}
+.btn-primary:hover { opacity: 0.92; box-shadow: 0 4px 12px rgba(0,145,205,0.35); }
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-teal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-teal:hover { opacity: 0.92; }
+.btn-teal:active { transform: scale(0.98); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  color: #475569;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-ghost:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+/* ─── Input ─── */
+.input {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 14px;
+  color: #0f172a;
+  transition: all 0.15s ease;
+  outline: none;
+}
+.input::placeholder { color: #94a3b8; }
+.input:focus { border-color: #0091cd; box-shadow: 0 0 0 3px rgba(0,145,205,0.1); }
+
+/* ─── Range slider — vitals style ─── */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   height: 6px;
   border-radius: 9999px;
   outline: none;
+  cursor: pointer;
+  background: #e2e8f0;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  appearance: none;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #6272f1;
+  background: white;
+  border: 2.5px solid #0091cd;
+  box-shadow: 0 1px 6px rgba(0,145,205,0.4);
   cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 2px 10px rgba(0,145,205,0.5);
 }
 
-/* Smooth transitions */
-.nav-link {
-  @apply transition-colors duration-150;
+/* ─── Vital monitor dot ─── */
+.vital-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.9);
+  display: inline-block;
 }
 
-/* Plan prose */
-.plan-content h2 { @apply text-lg font-semibold text-slate-800 mt-4 mb-1; }
-.plan-content h3 { @apply text-base font-semibold text-brand-700 mt-3 mb-1; }
-.plan-content ul { @apply list-disc pl-5 space-y-0.5 text-slate-700; }
-.plan-content ol { @apply list-decimal pl-5 space-y-0.5 text-slate-700; }
-.plan-content p { @apply text-slate-700 mb-2; }
-.plan-content strong { @apply font-semibold text-slate-800; }
+/* ─── Nav link ─── */
+.nav-link { transition: all 0.12s ease; }
+
+/* ─── Chat message ─── */
+.chat-message p       { margin-bottom: 6px; line-height: 1.65; }
+.chat-message ul      { list-style: disc; padding-left: 16px; margin-bottom: 8px; }
+.chat-message ol      { list-style: decimal; padding-left: 16px; margin-bottom: 8px; }
+.chat-message li      { margin-bottom: 3px; }
+.chat-message strong  { font-weight: 600; }
+.chat-message em      { font-style: italic; color: #475569; }
+
+/* ─── Plan prose ─── */
+.plan-content h2     { font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 24px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 2px solid #f1f5f9; }
+.plan-content h3     { font-size: 14px; font-weight: 600; color: #0074a4; margin-top: 16px; margin-bottom: 4px; }
+.plan-content ul     { list-style: disc; padding-left: 20px; color: #334155; margin-bottom: 12px; }
+.plan-content ol     { list-style: decimal; padding-left: 20px; color: #334155; margin-bottom: 12px; }
+.plan-content li     { margin-bottom: 4px; line-height: 1.6; }
+.plan-content p      { color: #334155; margin-bottom: 8px; line-height: 1.65; }
+.plan-content strong { font-weight: 600; color: #0f172a; }
+
+/* ─── Section header ─── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+
+/* ─── Status pill ─── */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 9999px;
+}
+
+/* Animate in */
+.animate-in { animation: slideUp 0.25s ease-out both; }
