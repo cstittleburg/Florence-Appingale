@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import {
-  Heart, BookOpen, Calendar, Upload, Brain, MessageCircle,
-  ChevronRight, AlertCircle, CheckCircle2, Activity,
+  Heart, Target, Calendar, BookMarked, Brain, MessageCircle,
+  ChevronRight, CheckCircle2, Activity,
   Stethoscope, ClipboardList, Pill, Clock,
 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
@@ -56,7 +56,7 @@ function getGreeting() {
 
 export default function Dashboard() {
   const navigate = useNavigate()
-  const { studentName, setStudentName, todayCheckin, uploadedFiles, schedule, savedPlans } = useApp()
+  const { studentName, setStudentName, todayCheckin, courses, schedule, savedFocuses } = useApp()
 
   const upcomingExams = schedule
     .filter(e => e.type === 'exam' && daysUntil(e.date) >= 0)
@@ -68,7 +68,12 @@ export default function Dashboard() {
 
   const avg = todayCheckin ? Math.round((todayCheckin.mental + todayCheckin.physical) / 2) : null
   const hl = healthLabel(avg)
-  const lastPlan = savedPlans[0] || null
+  const lastFocus = savedFocuses[0] || null
+  const totalTopics = courses.reduce((n, c) => n + (c.topics || []).length, 0)
+  const needsReview = courses.reduce((n, c) => n + (c.topics || []).filter(t => {
+    const conf = t.logs?.[0]?.confidence
+    return conf !== null && conf !== undefined && conf <= 2
+  }).length, 0)
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto animate-in">
@@ -136,13 +141,13 @@ export default function Dashboard() {
           onClick={() => navigate('/health')}
         />
         <VitalCard
-          icon={<ClipboardList className="w-4 h-4" />}
-          label="Materials"
-          value={uploadedFiles.length}
-          sub={`file${uploadedFiles.length !== 1 ? 's' : ''} loaded`}
+          icon={<BookMarked className="w-4 h-4" />}
+          label="Topics"
+          value={totalTopics}
+          sub={needsReview > 0 ? `⚠ ${needsReview} need review` : `${courses.length} course${courses.length !== 1 ? 's' : ''}`}
           dotColor="#a855f7"
           accentColor="#a855f7"
-          onClick={() => navigate('/upload')}
+          onClick={() => navigate('/courses')}
         />
         <VitalCard
           icon={<Calendar className="w-4 h-4" />}
@@ -154,13 +159,13 @@ export default function Dashboard() {
           onClick={() => navigate('/schedule')}
         />
         <VitalCard
-          icon={<BookOpen className="w-4 h-4" />}
-          label="Study Plan"
-          value={lastPlan ? 'Active' : 'None'}
-          sub={lastPlan ? `Updated ${fmtDate(lastPlan.generatedAt)}` : 'Generate one'}
+          icon={<Target className="w-4 h-4" />}
+          label="Daily Focus"
+          value={lastFocus ? 'Ready' : 'None'}
+          sub={lastFocus ? `Generated ${fmtDate(lastFocus.generatedAt)}` : 'Generate one'}
           dotColor="#10b981"
           accentColor="#10b981"
-          onClick={() => navigate('/plan')}
+          onClick={() => navigate('/focus')}
         />
       </div>
 
@@ -266,8 +271,8 @@ export default function Dashboard() {
           </div>
           <div className="space-y-1.5">
             {[
-              { icon: <Upload className="w-4 h-4" />, label: 'Upload a PowerPoint', to: '/upload', color: '#a855f7' },
-              { icon: <BookOpen className="w-4 h-4" />, label: "Generate Today's Study Plan", to: '/plan', color: '#0091cd' },
+              { icon: <BookMarked className="w-4 h-4" />, label: 'Manage My Courses & Topics', to: '/courses', color: '#a855f7' },
+              { icon: <Target className="w-4 h-4" />, label: "Generate Today's Focus", to: '/focus', color: '#0091cd' },
               { icon: <Brain className="w-4 h-4" />, label: 'Update Learning Profile', to: '/profile', color: '#0d9488' },
               { icon: <MessageCircle className="w-4 h-4" />, label: 'Open Motivational Chat', to: '/chat', color: '#f43f5e' },
             ].map(({ icon, label, to, color }) => (
@@ -299,13 +304,13 @@ export default function Dashboard() {
             Setup Checklist
           </div>
           <div className="space-y-2.5">
-            <CheckItem done={!!studentName}                                    label="Set your name" />
-            <CheckItem done={uploadedFiles.length > 0}                        label="Upload at least one course file" />
-            <CheckItem done={schedule.filter(e => e.type==='exam').length > 0} label="Add an exam date" />
-            <CheckItem done={!!todayCheckin}                                   label="Complete today's health check-in" />
-            <CheckItem done={savedPlans.length > 0}                           label="Generate a study plan" />
+            <CheckItem done={!!studentName}                                     label="Set your name" />
+            <CheckItem done={courses.length > 0}                               label="Add at least one course" />
+            <CheckItem done={totalTopics > 0}                                  label="Add topics to your courses" />
+            <CheckItem done={!!todayCheckin}                                    label="Complete today's health check-in" />
+            <CheckItem done={savedFocuses.length > 0}                          label="Generate today's focus" />
           </div>
-          {[!!studentName, uploadedFiles.length>0, schedule.filter(e=>e.type==='exam').length>0, !!todayCheckin, savedPlans.length>0].every(Boolean) && (
+          {[!!studentName, courses.length>0, totalTopics>0, !!todayCheckin, savedFocuses.length>0].every(Boolean) && (
             <div className="mt-4 flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium"
               style={{ background: '#ecfdf5', color: '#059669', border: '1px solid #a7f3d0' }}>
               <CheckCircle2 className="w-4 h-4" />

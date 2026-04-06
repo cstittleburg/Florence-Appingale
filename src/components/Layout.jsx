@@ -1,25 +1,23 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import {
-  LayoutDashboard, Upload, Calendar, Heart,
-  Brain, BookOpen, MessageCircle, Stethoscope,
+  LayoutDashboard, BookMarked, Calendar, Heart,
+  Brain, Target, MessageCircle, Stethoscope,
   Menu, X,
 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { useState } from 'react'
 
 const NAV = [
-  { to: '/',         icon: LayoutDashboard, label: 'Dashboard',       short: 'Home' },
-  { to: '/upload',   icon: Upload,          label: 'Upload Materials', short: 'Upload' },
-  { to: '/schedule', icon: Calendar,        label: 'Schedule',         short: 'Schedule' },
-  { to: '/health',   icon: Heart,           label: 'Health Check-In',  short: 'Health' },
-  { to: '/profile',  icon: Brain,           label: 'Learning Profile', short: 'Profile' },
-  { to: '/plan',     icon: BookOpen,        label: 'Study Plan',       short: 'Plan' },
-  { to: '/chat',     icon: MessageCircle,   label: 'Motivational Chat',short: 'Chat' },
+  { to: '/',         icon: LayoutDashboard, label: 'Dashboard',        short: 'Home' },
+  { to: '/courses',  icon: BookMarked,      label: 'My Courses',       short: 'Courses' },
+  { to: '/schedule', icon: Calendar,        label: 'Schedule',          short: 'Schedule' },
+  { to: '/health',   icon: Heart,           label: 'Health Check-In',   short: 'Health' },
+  { to: '/profile',  icon: Brain,           label: 'Learning Profile',  short: 'Profile' },
+  { to: '/focus',    icon: Target,          label: 'Daily Focus',       short: 'Focus' },
+  { to: '/chat',     icon: MessageCircle,   label: 'Motivational Chat', short: 'Chat' },
 ]
 
-// Bottom nav shows 5 items; remaining go in "More" drawer
-const BOTTOM_NAV   = NAV.slice(0, 4)
-const BOTTOM_EXTRA = NAV.slice(4)
+const BOTTOM_NAV = NAV.slice(0, 4)
 
 function wellnessInfo(score) {
   if (!score) return { label: 'No check-in', color: '#64748b', bg: 'rgba(100,116,139,0.15)' }
