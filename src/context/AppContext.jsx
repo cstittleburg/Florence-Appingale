@@ -86,13 +86,15 @@ export function AppProvider({ children }) {
   }
 
   const today = new Date().toISOString().split('T')[0]
-  const todayCheckin = healthCheckins.find(c => c.date === today) || null
+  const yesterday = (() => { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().split('T')[0] })()
+  const todayCheckin     = healthCheckins.find(c => c.date === today)     || null
+  const yesterdayCheckin = healthCheckins.find(c => c.date === yesterday) || null
 
   return (
     <AppContext.Provider value={{
       studentName, setStudentName,
       learningProfile, setLearningProfile,
-      healthCheckins, addCheckin, todayCheckin,
+      healthCheckins, addCheckin, todayCheckin, yesterdayCheckin,
       courses, addCourse, updateCourse, removeCourse,
       addTopic, removeTopic, logConfidence,
       schedule, addScheduleEvent, removeScheduleEvent,
