@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "nursing-app",
-      "runtimeExecutable": "/usr/local/bin/npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "/usr/local/Cellar/node/17.3.0/bin/node",
+      "runtimeArgs": ["/usr/local/lib/node_modules/npm/bin/npm-cli.js", "--prefix", "/Users/chrisstittleburg/Desktop/Nursing Study Companion", "run", "dev"],
       "port": 5173
     }
   ]

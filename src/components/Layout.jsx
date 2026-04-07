@@ -1,8 +1,8 @@
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, BookMarked, Calendar, Heart,
   Brain, Target, MessageCircle, Stethoscope,
-  Menu, X,
+  Menu, X, Cloud, CloudOff, Loader2,
 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { useState } from 'react'
@@ -27,8 +27,27 @@ function wellnessInfo(score) {
   return                  { label: 'Peak energy!', color: '#10b981', bg: 'rgba(16,185,129,0.12)' }
 }
 
+function SyncBadge({ status }) {
+  if (status === 'loading') return (
+    <div className="flex items-center gap-1.5 text-xs" style={{ color: '#38bdf8' }}>
+      <Loader2 className="w-3 h-3 animate-spin" /> Syncing…
+    </div>
+  )
+  if (status === 'synced') return (
+    <div className="flex items-center gap-1.5 text-xs" style={{ color: '#10b981' }}>
+      <Cloud className="w-3 h-3" /> Synced
+    </div>
+  )
+  if (status === 'error') return (
+    <div className="flex items-center gap-1.5 text-xs" style={{ color: '#ef4444' }}>
+      <CloudOff className="w-3 h-3" /> Offline
+    </div>
+  )
+  return null
+}
+
 export default function Layout({ children }) {
-  const { todayCheckin, studentName } = useApp()
+  const { todayCheckin, studentName, syncStatus, accessCode, clearAccessCode } = useApp()
   const [mobileOpen, setMobileOpen] = useState(false)
   const avg = todayCheckin ? Math.round((todayCheckin.mental + todayCheckin.physical) / 2) : null
   const wellness = wellnessInfo(avg)
@@ -96,10 +115,24 @@ export default function Layout({ children }) {
           ))}
         </nav>
 
-        {/* Wellness widget */}
-        <div className="relative mx-3 mb-5 mt-2 rounded-xl p-3.5"
+        {/* Sync + Wellness widget */}
+        <div className="relative mx-3 mb-5 mt-2 rounded-xl p-3.5 space-y-3"
           style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-          <p className="text-xs font-semibold uppercase tracking-wider mb-2.5" style={{ color: 'rgba(148,163,184,0.7)' }}>
+
+          {/* Sync status row */}
+          <div className="flex items-center justify-between">
+            <SyncBadge status={syncStatus} />
+            {accessCode && (
+              <span className="text-xs font-mono px-2 py-0.5 rounded"
+                style={{ color: 'rgba(148,163,184,0.5)', background: 'rgba(255,255,255,0.04)' }}>
+                #{accessCode}
+              </span>
+            )}
+          </div>
+
+          <div className="h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
+
+          <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'rgba(148,163,184,0.7)' }}>
             Today's Wellness
           </p>
           <div className="flex items-center gap-3">
